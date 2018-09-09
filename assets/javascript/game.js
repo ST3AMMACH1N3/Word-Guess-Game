@@ -12,16 +12,14 @@ window.onload = function() {
         remainingElem: document.getElementById("remaining-output"),
         guessedElem: document.getElementById("guessed-output"),
 
-        displayChange: function() {
-            this.winElem.textContent = this.wins;
-            this.wordElem.textContent = "";
-            for(var i = 0; i < this.progress.length; i++) {
-                this.wordElem.textContent += this.progress[i] + " ";
-            }
-            this.remainingElem.textContent = this.remaining;
-            this.guessedElem.textContent = "";
-            for(var i = 0; i < this.guessed.length; i++) {
-                this.guessedElem.textContent += this.guessed[i] + " ";
+        display: function(elem, val) {
+            if (Array.isArray(val)) {
+                elem.textContent = "";
+                for(var i = 0; i < val.length; i++) {
+                    elem.textContent += val[i] + " ";
+                }
+            } else {
+                elem.textContent = val;
             }
         },
 
@@ -31,15 +29,18 @@ window.onload = function() {
                     this.progress[i] = key;
                 }
             }
+            this.display(this.wordElem, this.progress);
 
             if (this.progress.indexOf("_") === -1) {
                 this.wins++;
+                this.display(this.winElem, this.wins);
                 this.reset();
-            }
+            }  
         },
 
         guessedIncorrect: function(key) {
             this.guessed.push(key);
+            this.display(this.guessedElem, this.guessed);
             this.remaining--;
             if (this.remaining < 1) {
                 this.reset();
@@ -60,7 +61,6 @@ window.onload = function() {
             } else {
                 this.guessedIncorrect(key);
             }
-            this.displayChange();
         },
 
         pickWord: function() {
@@ -73,10 +73,12 @@ window.onload = function() {
             for(var i = 0; i < this.word.length; i++) {
                 this.progress.push("_");
             }
+            this.display(this.wordElem, this.progress);
             this.guessed = [];
+            this.display(this.guessedElem, this.guessed);
             this.remaining = 10;
+            this.display(this.remainingElem, this.remaining);
             this.beginElem.style.visibility = "visible";
-            this.displayChange();
         }
     }
 
