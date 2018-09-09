@@ -13,11 +13,6 @@ window.onload = function() {
         guessedElem: document.getElementById("guessed-output"),
 
         displayChange: function() {
-            if (this.progress.length === 0 && this.guessed.length === 0) {
-                this.beginElem.visibility = "visible";
-            } else {
-                this.beginElem.visibility = "hiddem";
-            }
             this.winElem.textContent = this.wins;
             this.wordElem.textContent = "";
             for(var i = 0; i < this.progress.length; i++) {
@@ -30,26 +25,40 @@ window.onload = function() {
             }
         },
 
+        guessedCorrect: function(key) {
+            for(var i = 0; i < this.word.length; i++) {
+                if (this.word[i] === key) {
+                    this.progress[i] = key;
+                }
+            }
+
+            if (this.progress.indexOf("_") === -1) {
+                this.wins++;
+                this.reset();
+            }
+        },
+
+        guessedIncorrect: function(key) {
+            this.guessed.push(key);
+            this.remaining--;
+            if (this.remaining < 1) {
+                this.reset();
+            }
+        },
+
         keyPressed: function(key) {
             if (this.guessed.indexOf(key) !== -1 || this.progress.indexOf(key) !== -1) {
                 return;
             }
+
+            if (this.beginElem.style.visibility === "visible") {
+                this.beginElem.style.visibility = "hidden";
+            }
+
             if (this.word.indexOf(key) !== -1) {
-                for(var i = 0; i < this.word.length; i++) {
-                    if (this.word[i] === key) {
-                        this.progress[i] = key;
-                    }
-                }
-                if (this.progress.indexOf("_") === -1) {
-                    this.wins++;
-                    this.reset();
-                }
+                this.guessedCorrect(key);
             } else {
-                this.guessed.push(key);
-                this.remaining--;
-                if (this.remaining < 1) {
-                    this.reset();
-                }
+                this.guessedIncorrect(key);
             }
             this.displayChange();
         },
@@ -66,6 +75,7 @@ window.onload = function() {
             }
             this.guessed = [];
             this.remaining = 10;
+            this.beginElem.style.visibility = "visible";
             this.displayChange();
         }
     }
