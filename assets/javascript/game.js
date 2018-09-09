@@ -12,6 +12,24 @@ window.onload = function() {
         remainingElem: document.getElementById("remaining-output"),
         guessedElem: document.getElementById("guessed-output"),
 
+        displayChange: function() {
+            if (this.progress.length === 0 && this.guessed.length === 0) {
+                this.beginElem.visibility = "visible";
+            } else {
+                this.beginElem.visibility = "hiddem";
+            }
+            this.winElem.textContent = this.wins;
+            this.wordElem.textContent = "";
+            for(var i = 0; i < this.progress.length; i++) {
+                this.wordElem.textContent += this.progress[i] + " ";
+            }
+            this.remainingElem.textContent = this.remaining;
+            this.guessedElem.textContent = "";
+            for(var i = 0; i < this.guessed.length; i++) {
+                this.guessedElem.textContent += this.guessed[i] + " ";
+            }
+        },
+
         keyPressed: function(key) {
             if (this.guessed.indexOf(key) !== -1 || this.progress.indexOf(key) !== -1) {
                 return;
@@ -23,6 +41,7 @@ window.onload = function() {
                     }
                 }
                 if (this.progress.indexOf("_") === -1) {
+                    this.wins++;
                     this.reset();
                 }
             } else {
@@ -32,6 +51,7 @@ window.onload = function() {
                     this.reset();
                 }
             }
+            this.displayChange();
         },
 
         pickWord: function() {
@@ -46,8 +66,11 @@ window.onload = function() {
             }
             this.guessed = [];
             this.remaining = 10;
+            this.displayChange();
         }
     }
+
+    game.reset();
 
     document.onkeypress = function(event) {
         game.keyPressed(event.key.toLowerCase());
