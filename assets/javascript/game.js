@@ -48,7 +48,7 @@ window.onload = function() {
         },
 
         keyPressed: function(key) {
-            if (this.guessed.indexOf(key) !== -1 || this.progress.indexOf(key) !== -1) {
+            if (this.guessed.indexOf(key) !== -1 || this.progress.indexOf(key) !== -1 || key.length > 1 || key.charCodeAt(0) < 97 || key.charCodeAt(0) > 122) {
                 return;
             }
 
