@@ -6,6 +6,7 @@ window.onload = function() {
         progress: [],
         guessed: [],
         wordList: ["html", "css", "javascript", "array", "function", "method", "variable", "string", "boolean", "object", "loop", "conditional", "agile", "bootstrap", "react"],
+        wordsSolved: [],
         beginElem: document.getElementById("begin-label"),
         winElem: document.getElementById("wins-output"),
         wordElem: document.getElementById("word-output"),
@@ -34,6 +35,7 @@ window.onload = function() {
             if (this.progress.indexOf("_") === -1) {
                 this.wins++;
                 this.display(this.winElem, this.wins);
+                this.solved();
                 this.reset();
             }  
         },
@@ -42,6 +44,7 @@ window.onload = function() {
             this.guessed.push(key);
             this.display(this.guessedElem, this.guessed);
             this.remaining--;
+            this.display(this.remainingElem, this.remaining);
             if (this.remaining < 1) {
                 this.reset();
             }
@@ -64,7 +67,7 @@ window.onload = function() {
         },
 
         pickWord: function() {
-            this.word = this.wordList[Math.floor(Math.random() * this.wordList.length)];
+            this.word = this.wordList[Math.floor(Math.random() * this.wordList.length)]; 
         },
 
         reset: function() {
@@ -79,6 +82,15 @@ window.onload = function() {
             this.remaining = 10;
             this.display(this.remainingElem, this.remaining);
             this.beginElem.style.visibility = "visible";
+        },
+
+        solved: function() {
+            if (this.wordList.length > 1) {
+                this.wordsSolved = this.wordsSolved.concat(this.wordList.splice(this.wordList.indexOf(this.word), 1));
+            } else {
+                this.wordList = this.wordList.concat(this.wordsSolved.splice(0, this.wordsSolved.length));
+                
+            }
         }
     }
 
